@@ -1,0 +1,51 @@
+/**
+ * CSS files with the .module.css suffix will be treated as CSS modules
+ * and scoped locally.
+ */
+
+ .heroBanner {
+  padding: 2rem 0; /* Reduced padding slightly as text is gone */
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  background-color: transparent; /* Make header transparent to show body background */
+  min-height: calc(100vh - var(--ifm-navbar-height) - var(--ifm-footer-height) - 1px); /* Try to fill viewport height minus navbar/footer */
+  display: flex; /* Use flexbox for vertical centering */
+  align-items: center; /* Vertically center content */
+  justify-content: center; /* Horizontally center content (redundant due to text-align and margin:auto, but good practice with flex) */
+}
+
+.heroLogo {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  /* Set desired width and max-width */
+  width: 600px; /* Target width */
+  max-width: 90%; /* Ensure it shrinks gracefully on smaller screens */
+  height: auto; /* Maintain aspect ratio */
+}
+
+@media screen and (max-width: 996px) {
+  .heroBanner {
+    padding: 2rem; /* Keep some padding */
+    min-height: calc(100vh - var(--ifm-navbar-height) - var(--ifm-footer-height) - 1px); /* Maintain height */
+  }
+  .heroLogo {
+     /* Adjust width for medium screens if needed */
+     width: 450px; /* Slightly smaller */
+     max-width: 90%;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .heroLogo {
+     /* Adjust width for smaller screens */
+     width: 300px; /* Smaller again */
+     max-width: 85%;
+  }
+}
+
+/* Remove or comment out styles for elements we removed */
+/* .buttons { ... } */
+/* .features { ... } */
+/* .featureSvg { ... } */
