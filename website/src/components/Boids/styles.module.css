@@ -6,5 +6,7 @@
   height: 100%;
   pointer-events: none; /* Make sure the canvas doesn't interfere with mouse events */
   display: block; /* Ensure the canvas is displayed */
-  opacity: 1 !important; /* Force opacity to be 1 to ensure visibility */
+  opacity: 1; /* Ensure visibility */
+  /* Clip to the canvas boundaries */
+  overflow: hidden;
 }

@@ -21,7 +21,8 @@
   
   /* Custom colors */
   --boid-color: #6a5a45;
-  --background-color: #ece6d6;
+  --hero-background-color: #ece6d6; /* Tan color for hero background */
+  --main-background-color: #f8f8f8; /* Light grey almost white for main background */
 }
 
 /* For readability concerns, you should choose a lighter palette in dark mode. */
@@ -37,8 +38,9 @@
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
 } */
 
-html, body {
-  background-color: var(--background-color);
+/* Set the main background color */
+html, body, #__docusaurus {
+  background-color: var(--main-background-color);
   color: #333; /* Ensure default text has good contrast */
 }
 
@@ -52,7 +54,8 @@ html, body {
   font-family: var(--ifm-font-family-base);
 }
 
-/* Make sure the hero section takes up at least the full viewport minus header/footer */
+/* Make sure the hero section has the tan background */
 .hero {
   min-height: calc(100vh - var(--ifm-navbar-height) - var(--ifm-footer-height) - 1px);
+  background-color: var(--hero-background-color);
 }
