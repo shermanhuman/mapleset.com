@@ -1,6 +1,6 @@
 import React, { useRef, useMemo } from 'react';
 import styles from './styles.module.css';
-import { useCanvasDimensions, useBoids, useBoidAnimation } from './hooks';
+import { useCanvasDimensions, useBoids, useBoidAnimation, useLeafImage } from './hooks';
 
 interface BoidsCanvasProps {
   numBoids?: number;
@@ -38,6 +38,9 @@ const BoidsCanvas: React.FC<BoidsCanvasProps> = ({
   // Refs
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   
+  // Load leaf image
+  const leafImage = useLeafImage();
+  
   // Custom hooks
   const dimensions = useCanvasDimensions(canvasRef);
   const [boids, setBoids] = useBoids(dimensions, numBoids, maxSpeed);
@@ -70,7 +73,7 @@ const BoidsCanvas: React.FC<BoidsCanvasProps> = ({
   ]);
   
   // Run animation
-  useBoidAnimation(canvasRef, boids, setBoids, animationOptions);
+  useBoidAnimation(canvasRef, boids, setBoids, leafImage, animationOptions);
 
   // Canvas style with zIndex
   const canvasStyle = useMemo(() => ({ 

@@ -13,8 +13,8 @@ function HomepageHeader() {
       {/* The Boids simulation container */}
       <div className={styles.boidsContainer}>
         <BoidsCanvas 
-          numBoids={180} 
-          maxSpeed={10} 
+          numBoids={200} 
+          maxSpeed={12} 
           minSpeed={5}
           visualRange={32}
           alignmentForce={0.5} // Reduced to prevent over-alignment

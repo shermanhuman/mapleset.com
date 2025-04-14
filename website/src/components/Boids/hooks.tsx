@@ -7,6 +7,7 @@ export interface Boid {
   vx: number;
   vy: number;
   color: string;
+  scale?: number; // Add scale for size variety
 }
 
 export interface Dimensions {
@@ -20,6 +21,26 @@ export const DEFAULT_COLORS = [
   'rgba(106, 90, 69, 0.95)', // #6a5a45 with slight opacity variation
   'rgba(106, 90, 69, 0.9)', // #6a5a45 with slight opacity variation
 ];
+
+/**
+ * Custom hook to preload the leaf image
+ */
+export const useLeafImage = () => {
+  const [leafImage, setLeafImage] = useState<HTMLImageElement | null>(null);
+  
+  useEffect(() => {
+    const img = new Image();
+    img.src = '/img/leaf.svg'; // Path relative to static directory
+    img.onload = () => {
+      setLeafImage(img);
+    };
+    return () => {
+      img.onload = null; // Clean up
+    };
+  }, []);
+  
+  return leafImage;
+};
 
 /**
  * Custom hook to handle canvas dimensions
@@ -62,15 +83,18 @@ export const useBoids = (
   useEffect(() => {
     if (dimensions.width === 0 || dimensions.height === 0) return;
 
-    // Create boids with more randomized positions and velocities
+    // Create boids with randomized positions, velocities, and scales
     const initialBoids: Boid[] = Array.from({ length: numBoids }, () => {
       // Random position throughout the canvas
       const x = Math.random() * dimensions.width;
       const y = Math.random() * dimensions.height;
       
-      // More randomized velocities for better initial dispersion
+      // Randomized velocities for better initial dispersion
       const angle = Math.random() * Math.PI * 2; // Random direction
       const speed = (0.5 + Math.random() * 0.5) * maxSpeed; // Random speed between 50% and 100% of maxSpeed
+      
+      // Random scale for size variety (between 0.7 and 1.3 of base size)
+      const scale = 0.7 + Math.random() * 0.6;
       
       return {
         x: x,
@@ -78,6 +102,7 @@ export const useBoids = (
         vx: Math.cos(angle) * speed,
         vy: Math.sin(angle) * speed,
         color: DEFAULT_COLORS[Math.floor(Math.random() * DEFAULT_COLORS.length)],
+        scale
       };
     });
 
@@ -94,6 +119,7 @@ export const useBoidAnimation = (
   canvasRef: React.RefObject<HTMLCanvasElement>,
   boids: Boid[],
   setBoids: React.Dispatch<React.SetStateAction<Boid[]>>,
+  leafImage: HTMLImageElement | null,
   options: {
     maxSpeed: number;
     alignmentForce: number;
@@ -130,48 +156,41 @@ export const useBoidAnimation = (
     );
   }, []);
 
-  // Draw a single boid
+  // Draw a single boid using the leaf image
   const drawBoid = useCallback((ctx: CanvasRenderingContext2D, boid: Boid) => {
-    // Calculate angle for direction
-    const angle = Math.atan2(boid.vy, boid.vx);
+    if (!leafImage) return;
     
-    ctx.fillStyle = boid.color;
-    ctx.beginPath();
+    // Calculate the angle for direction
+    const angle = Math.atan2(boid.vy, boid.vx) + Math.PI/2; // Add 90 degrees because the leaf stem points down
     
-    // Draw a triangle for the boid
-    const size = boidSize;
+    // Save the current context state
+    ctx.save();
     
-    // Move to the front of the triangle (longer to look more like a bird/fish)
-    ctx.moveTo(
-      boid.x + Math.cos(angle) * size * 2.2,
-      boid.y + Math.sin(angle) * size * 2.2
-    );
+    // Move to the boid's position and rotate
+    ctx.translate(boid.x, boid.y);
+    ctx.rotate(angle);
     
-    // Left wing
-    ctx.lineTo(
-      boid.x + Math.cos(angle + (2.5 * Math.PI) / 3) * size,
-      boid.y + Math.sin(angle + (2.5 * Math.PI) / 3) * size
-    );
+    // Apply the boid's scale
+    const scale = (boid.scale || 1) * boidSize / 5; // Adjust size based on boidSize parameter
+    ctx.scale(scale, scale);
     
-    // Right wing
-    ctx.lineTo(
-      boid.x + Math.cos(angle + (3.5 * Math.PI) / 3) * size,
-      boid.y + Math.sin(angle + (3.5 * Math.PI) / 3) * size
-    );
+    // Set global alpha for subtle transparency variation
+    ctx.globalAlpha = 0.85 + (boid.scale || 1) * 0.15;
     
-    ctx.closePath();
-    ctx.fill();
+    // Draw the leaf image centered on the boid position
+    // The SVG is 4.1mm x 9.6mm, so we'll center it accordingly
+    const imgWidth = leafImage.width;
+    const imgHeight = leafImage.height;
+    ctx.drawImage(leafImage, -imgWidth/2, -imgHeight/2, imgWidth, imgHeight);
     
-    // Add a subtle stroke outline
-    ctx.strokeStyle = 'rgba(0, 0, 0, 0.2)';
-    ctx.lineWidth = 1;
-    ctx.stroke();
-  }, [boidSize]);
+    // Restore the context state
+    ctx.restore();
+  }, [leafImage, boidSize]);
 
   // Handle edge behavior - bounce or wrap
   const handleEdges = useCallback((boid: Boid, dimensions: Dimensions): Boid => {
     let { x, y, vx, vy } = boid;
-    const edge = boidSize * 2; // Distance from edge to trigger behavior
+    const edge = 20; // Distance from edge to trigger behavior
     
     if (edgeBehavior === 'bounce') {
       // Bounce off edges with some margin
@@ -199,7 +218,7 @@ export const useBoidAnimation = (
     }
     
     return { ...boid, x, y, vx, vy };
-  }, [boidSize, edgeBehavior]);
+  }, [edgeBehavior]);
 
   // Update function to calculate the next position of each boid
   const updateBoids = useCallback(() => {
@@ -339,8 +358,10 @@ export const useBoidAnimation = (
       // Update boids position
       const updatedBoids = updateBoids();
       
-      // Draw boids
-      updatedBoids.forEach(boid => drawBoid(ctx, boid));
+      // Draw boids only if leaf image is loaded
+      if (leafImage) {
+        updatedBoids.forEach(boid => drawBoid(ctx, boid));
+      }
       
       // Update state outside of the render loop for better performance
       setBoids(updatedBoids);
@@ -357,7 +378,7 @@ export const useBoidAnimation = (
         cancelAnimationFrame(animationFrameId.current);
       }
     };
-  }, [boids, backgroundColor, updateBoids, drawBoid, setBoids, canvasRef]);
+  }, [boids, backgroundColor, updateBoids, drawBoid, setBoids, canvasRef, leafImage]);
 
   return null;
 };
