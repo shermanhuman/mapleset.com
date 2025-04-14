@@ -3,22 +3,32 @@ import clsx from 'clsx';
 import Layout from '@theme/Layout';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import styles from './index.module.css';
+import BoidsCanvas from '../components/Boids';
+import BoidsDebugger from '../components/BoidsDebugger';
 
 function HomepageHeader() {
   const {siteConfig} = useDocusaurusContext();
   return (
-    // Removed hero--primary class to avoid default theme background/text colors interfering
     <header className={clsx('hero', styles.heroBanner)}>
-      <div className="container">
-        {/* Use the logo from the static directory */}
-        <img
-          src="/img/logo.svg" // Path relative to the 'static' folder
-          alt={siteConfig.title + ' Logo'} // Update alt text slightly
-          className={styles.heroLogo} // Use CSS to control size
+      {/* The Boids simulation container */}
+      <div className={styles.boidsContainer}>
+        <BoidsCanvas 
+          numBoids={200} // Increased number for more visibility
+          maxSpeed={1.8} // Slightly slower for better visibility
+          visualRange={90} // Increased for more interaction
+          alignmentForce={0.05}
+          cohesionForce={0.003}
+          separationForce={0.1}
+          zIndex={1} // Ensure it's visible
+          boidSize={9} // Larger boids for better visibility
         />
-        {/* Removed h1 and p elements as they are in the logo */}
-        {/* <h1 className="hero__title">{siteConfig.title}</h1> */}
-        {/* <p className="hero__subtitle">{siteConfig.tagline}</p> */}
+      </div>
+      <div className="container">
+        <img
+          src="/img/logo.svg"
+          alt={siteConfig.title + ' Logo'}
+          className={styles.heroLogo}
+        />
       </div>
     </header>
   );
@@ -28,11 +38,10 @@ export default function Home(): JSX.Element {
   const {siteConfig} = useDocusaurusContext();
   return (
     <Layout
-      // Updated title to be simpler as tagline is in logo
       title="Home"
-      description={siteConfig.tagline}> {/* Keep description for SEO */}
+      description={siteConfig.tagline}>
       <HomepageHeader />
-      {/* Main content is empty */}
+      <BoidsDebugger />
     </Layout>
   );
 }

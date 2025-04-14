@@ -3,49 +3,53 @@
  * and scoped locally.
  */
 
- .heroBanner {
-  padding: 2rem 0; /* Reduced padding slightly as text is gone */
+.heroBanner {
+  padding: 2rem 0;
   text-align: center;
   position: relative;
   overflow: hidden;
-  background-color: transparent; /* Make header transparent to show body background */
-  min-height: calc(100vh - var(--ifm-navbar-height) - var(--ifm-footer-height) - 1px); /* Try to fill viewport height minus navbar/footer */
-  display: flex; /* Use flexbox for vertical centering */
-  align-items: center; /* Vertically center content */
-  justify-content: center; /* Horizontally center content (redundant due to text-align and margin:auto, but good practice with flex) */
+  background-color: transparent;
+  min-height: calc(100vh - var(--ifm-navbar-height) - var(--ifm-footer-height) - 1px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Container for boids animation, positioned to fill the hero section */
+.boidsContainer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1; /* Make sure this is visible */
 }
 
 .heroLogo {
   display: block;
   margin-left: auto;
   margin-right: auto;
-  /* Set desired width and max-width */
-  width: 600px; /* Target width */
-  max-width: 90%; /* Ensure it shrinks gracefully on smaller screens */
-  height: auto; /* Maintain aspect ratio */
+  width: 600px;
+  max-width: 90%;
+  height: auto;
+  position: relative;
+  z-index: 2; /* Keep this above the boids */
 }
 
 @media screen and (max-width: 996px) {
   .heroBanner {
-    padding: 2rem; /* Keep some padding */
-    min-height: calc(100vh - var(--ifm-navbar-height) - var(--ifm-footer-height) - 1px); /* Maintain height */
+    padding: 2rem;
+    min-height: calc(100vh - var(--ifm-navbar-height) - var(--ifm-footer-height) - 1px);
   }
   .heroLogo {
-     /* Adjust width for medium screens if needed */
-     width: 450px; /* Slightly smaller */
+     width: 450px;
      max-width: 90%;
   }
 }
 
 @media screen and (max-width: 768px) {
   .heroLogo {
-     /* Adjust width for smaller screens */
-     width: 300px; /* Smaller again */
+     width: 300px;
      max-width: 85%;
   }
 }
-
-/* Remove or comment out styles for elements we removed */
-/* .buttons { ... } */
-/* .features { ... } */
-/* .featureSvg { ... } */

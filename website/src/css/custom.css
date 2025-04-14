@@ -18,6 +18,10 @@
 
   /* Apply Inter font globally */
   --ifm-font-family-base: 'Inter', sans-serif;
+  
+  /* Custom colors */
+  --boid-color: #6a5a45;
+  --background-color: #ece6d6;
 }
 
 /* For readability concerns, you should choose a lighter palette in dark mode. */
@@ -34,7 +38,7 @@
 } */
 
 html, body {
-  background-color: #ece6d6;
+  background-color: var(--background-color);
   color: #333; /* Ensure default text has good contrast */
 }
 
@@ -46,4 +50,9 @@ html, body {
 /* Ensure footer uses the font */
 .footer {
   font-family: var(--ifm-font-family-base);
+}
+
+/* Make sure the hero section takes up at least the full viewport minus header/footer */
+.hero {
+  min-height: calc(100vh - var(--ifm-navbar-height) - var(--ifm-footer-height) - 1px);
 }
