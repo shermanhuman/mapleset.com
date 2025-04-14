@@ -16,7 +16,6 @@ interface BoidsCanvasProps {
   boidSize?: number;
   randomness?: number;
   edgeBehavior?: 'wrap' | 'bounce';
-  debug?: boolean;
 }
 
 const BoidsCanvas: React.FC<BoidsCanvasProps> = ({
@@ -33,7 +32,6 @@ const BoidsCanvas: React.FC<BoidsCanvasProps> = ({
   boidSize = 7,
   randomness = 0.05,
   edgeBehavior = 'bounce',
-  debug = false,
 }) => {
   // Refs
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -76,17 +74,13 @@ const BoidsCanvas: React.FC<BoidsCanvasProps> = ({
   useBoidAnimation(canvasRef, boids, setBoids, leafImage, animationOptions);
 
   // Canvas style with zIndex
-  const canvasStyle = useMemo(() => ({ 
-    zIndex,
-    ...(debug ? { border: '1px solid red' } : {})
-  }), [zIndex, debug]);
+  const canvasStyle = useMemo(() => ({ zIndex }), [zIndex]);
 
   return (
     <canvas
       ref={canvasRef}
       className={styles.boidsCanvas}
       style={canvasStyle}
-      data-testid="boids-canvas"
     />
   );
 };

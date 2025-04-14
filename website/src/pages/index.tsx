@@ -4,7 +4,6 @@ import Layout from '@theme/Layout';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import styles from './index.module.css';
 import BoidsCanvas from '../components/Boids';
-import BoidsDebugger from '../components/BoidsDebugger';
 
 function HomepageHeader() {
   const {siteConfig} = useDocusaurusContext();
@@ -13,8 +12,8 @@ function HomepageHeader() {
       {/* The Boids simulation container */}
       <div className={styles.boidsContainer}>
         <BoidsCanvas 
-          numBoids={200} 
-          maxSpeed={12} 
+          numBoids={200}
+          maxSpeed={12}
           minSpeed={5}
           visualRange={32}
           alignmentForce={0.5} // Reduced to prevent over-alignment
@@ -45,7 +44,6 @@ export default function Home(): JSX.Element {
       title="Home"
       description={siteConfig.tagline}>
       <HomepageHeader />
-      <BoidsDebugger />
     </Layout>
   );
 }
