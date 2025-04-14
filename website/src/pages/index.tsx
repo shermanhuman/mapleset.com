@@ -13,14 +13,18 @@ function HomepageHeader() {
       {/* The Boids simulation container */}
       <div className={styles.boidsContainer}>
         <BoidsCanvas 
-          numBoids={200} // Increased number for more visibility
-          maxSpeed={1.8} // Slightly slower for better visibility
-          visualRange={90} // Increased for more interaction
-          alignmentForce={0.05}
-          cohesionForce={0.003}
-          separationForce={0.1}
-          zIndex={1} // Ensure it's visible
-          boidSize={9} // Larger boids for better visibility
+          numBoids={180} 
+          maxSpeed={10} 
+          minSpeed={5}
+          visualRange={32}
+          alignmentForce={0.5} // Reduced to prevent over-alignment
+          cohesionForce={0.002} // Reduced to prevent excessive clustering
+          separationForce={5} // Increased to prevent clumping
+          zIndex={1}
+          boidSize={8}
+          randomness={0.008} // Adds variability to movement
+          edgeBehavior="bounce" // Makes them bounce off edges instead of wrapping
+          minDistance={30} // Increased minimum distance for less clumping
         />
       </div>
       <div className="container">

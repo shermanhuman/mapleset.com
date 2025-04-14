@@ -5,6 +5,7 @@ import { useCanvasDimensions, useBoids, useBoidAnimation } from './hooks';
 interface BoidsCanvasProps {
   numBoids?: number;
   maxSpeed?: number;
+  minSpeed?: number;
   alignmentForce?: number;
   cohesionForce?: number;
   separationForce?: number;
@@ -13,20 +14,25 @@ interface BoidsCanvasProps {
   backgroundColor?: string;
   zIndex?: number;
   boidSize?: number;
+  randomness?: number;
+  edgeBehavior?: 'wrap' | 'bounce';
   debug?: boolean;
 }
 
 const BoidsCanvas: React.FC<BoidsCanvasProps> = ({
-  numBoids = 120, // Increased for better visibility
-  maxSpeed = 2.5, // Adjusted for smoother movement
+  numBoids = 120,
+  maxSpeed = 2.5,
+  minSpeed = 1.0,
   alignmentForce = 0.05,
   cohesionForce = 0.04,
   separationForce = 0.1,
-  visualRange = 70, // Increased for more interaction
-  minDistance = 20,
+  visualRange = 70,
+  minDistance = 25,
   backgroundColor = 'transparent',
   zIndex = -1,
-  boidSize = 7, // Increased size for better visibility
+  boidSize = 7,
+  randomness = 0.05,
+  edgeBehavior = 'bounce',
   debug = false,
 }) => {
   // Refs
@@ -39,6 +45,7 @@ const BoidsCanvas: React.FC<BoidsCanvasProps> = ({
   // Animation options
   const animationOptions = useMemo(() => ({
     maxSpeed,
+    minSpeed,
     alignmentForce,
     cohesionForce,
     separationForce,
@@ -46,8 +53,11 @@ const BoidsCanvas: React.FC<BoidsCanvasProps> = ({
     minDistance,
     backgroundColor,
     boidSize,
+    randomness,
+    edgeBehavior,
   }), [
     maxSpeed,
+    minSpeed,
     alignmentForce,
     cohesionForce,
     separationForce,
@@ -55,6 +65,8 @@ const BoidsCanvas: React.FC<BoidsCanvasProps> = ({
     minDistance,
     backgroundColor,
     boidSize,
+    randomness,
+    edgeBehavior,
   ]);
   
   // Run animation
@@ -71,7 +83,7 @@ const BoidsCanvas: React.FC<BoidsCanvasProps> = ({
       ref={canvasRef}
       className={styles.boidsCanvas}
       style={canvasStyle}
-      data-testid="boids-canvas" // Add this for easier testing/debugging
+      data-testid="boids-canvas"
     />
   );
 };

@@ -14,11 +14,11 @@ export interface Dimensions {
   height: number;
 }
 
-// Using exactly the specified brown color - #6a5a45 with different opacities
+// Using exactly the specified brown color - #6a5a45 with slight variations
 export const DEFAULT_COLORS = [
   '#6a5a45', // Solid color as requested
-  'rgba(106, 90, 69, 0.9)', // #6a5a45 with 0.9 opacity for slight variation
-  'rgba(106, 90, 69, 0.8)', // #6a5a45 with 0.8 opacity for slight variation
+  'rgba(106, 90, 69, 0.95)', // #6a5a45 with slight opacity variation
+  'rgba(106, 90, 69, 0.9)', // #6a5a45 with slight opacity variation
 ];
 
 /**
@@ -62,13 +62,24 @@ export const useBoids = (
   useEffect(() => {
     if (dimensions.width === 0 || dimensions.height === 0) return;
 
-    const initialBoids: Boid[] = Array.from({ length: numBoids }, () => ({
-      x: Math.random() * dimensions.width,
-      y: Math.random() * dimensions.height,
-      vx: (Math.random() * 2 - 1) * maxSpeed,
-      vy: (Math.random() * 2 - 1) * maxSpeed,
-      color: DEFAULT_COLORS[Math.floor(Math.random() * DEFAULT_COLORS.length)],
-    }));
+    // Create boids with more randomized positions and velocities
+    const initialBoids: Boid[] = Array.from({ length: numBoids }, () => {
+      // Random position throughout the canvas
+      const x = Math.random() * dimensions.width;
+      const y = Math.random() * dimensions.height;
+      
+      // More randomized velocities for better initial dispersion
+      const angle = Math.random() * Math.PI * 2; // Random direction
+      const speed = (0.5 + Math.random() * 0.5) * maxSpeed; // Random speed between 50% and 100% of maxSpeed
+      
+      return {
+        x: x,
+        y: y,
+        vx: Math.cos(angle) * speed,
+        vy: Math.sin(angle) * speed,
+        color: DEFAULT_COLORS[Math.floor(Math.random() * DEFAULT_COLORS.length)],
+      };
+    });
 
     setBoids(initialBoids);
   }, [dimensions, numBoids, maxSpeed]);
@@ -92,6 +103,9 @@ export const useBoidAnimation = (
     minDistance: number;
     backgroundColor: string;
     boidSize: number;
+    edgeBehavior?: 'wrap' | 'bounce';
+    minSpeed?: number;
+    randomness?: number;
   }
 ) => {
   const animationFrameId = useRef<number | null>(null);
@@ -103,7 +117,10 @@ export const useBoidAnimation = (
     visualRange, 
     minDistance, 
     backgroundColor,
-    boidSize
+    boidSize,
+    edgeBehavior = 'bounce',
+    minSpeed = 1.0,   // Minimum speed to prevent boids from stopping
+    randomness = 0.05 // Random movement factor to prevent perfect alignment
   } = options;
 
   // Calculate the distance between two boids
@@ -121,13 +138,13 @@ export const useBoidAnimation = (
     ctx.fillStyle = boid.color;
     ctx.beginPath();
     
-    // Draw a triangle for the boid - using provided size parameter for better control
+    // Draw a triangle for the boid
     const size = boidSize;
     
-    // Move to the front of the triangle
+    // Move to the front of the triangle (longer to look more like a bird/fish)
     ctx.moveTo(
-      boid.x + Math.cos(angle) * size * 2,
-      boid.y + Math.sin(angle) * size * 2
+      boid.x + Math.cos(angle) * size * 2.2,
+      boid.y + Math.sin(angle) * size * 2.2
     );
     
     // Left wing
@@ -145,11 +162,44 @@ export const useBoidAnimation = (
     ctx.closePath();
     ctx.fill();
     
-    // Add a stroke outline for better visibility
-    ctx.strokeStyle = 'rgba(0, 0, 0, 0.3)';
+    // Add a subtle stroke outline
+    ctx.strokeStyle = 'rgba(0, 0, 0, 0.2)';
     ctx.lineWidth = 1;
     ctx.stroke();
   }, [boidSize]);
+
+  // Handle edge behavior - bounce or wrap
+  const handleEdges = useCallback((boid: Boid, dimensions: Dimensions): Boid => {
+    let { x, y, vx, vy } = boid;
+    const edge = boidSize * 2; // Distance from edge to trigger behavior
+    
+    if (edgeBehavior === 'bounce') {
+      // Bounce off edges with some margin
+      if (x < edge) {
+        vx = Math.abs(vx) * 1.5; // Boost away from the edge
+        x = edge;
+      } else if (x > dimensions.width - edge) {
+        vx = -Math.abs(vx) * 1.5; // Boost away from the edge
+        x = dimensions.width - edge;
+      }
+      
+      if (y < edge) {
+        vy = Math.abs(vy) * 1.5; // Boost away from the edge
+        y = edge;
+      } else if (y > dimensions.height - edge) {
+        vy = -Math.abs(vy) * 1.5; // Boost away from the edge
+        y = dimensions.height - edge;
+      }
+    } else {
+      // Wrap around the screen with a small margin
+      if (x < -edge) x = dimensions.width + edge;
+      if (x > dimensions.width + edge) x = -edge;
+      if (y < -edge) y = dimensions.height + edge;
+      if (y > dimensions.height + edge) y = -edge;
+    }
+    
+    return { ...boid, x, y, vx, vy };
+  }, [boidSize, edgeBehavior]);
 
   // Update function to calculate the next position of each boid
   const updateBoids = useCallback(() => {
@@ -185,8 +235,10 @@ export const useBoidAnimation = (
         
         // Separation: avoid crowding neighboring boids
         if (dist < minDistance) {
-          separationX += boid.x - otherBoid.x;
-          separationY += boid.y - otherBoid.y;
+          // Stronger separation when very close
+          const factor = (minDistance - dist) / minDistance;
+          separationX += (boid.x - otherBoid.x) * factor * factor;
+          separationY += (boid.y - otherBoid.y) * factor * factor;
         }
         
         numNeighbors++;
@@ -207,24 +259,34 @@ export const useBoidAnimation = (
       let newVX = boid.vx;
       let newVY = boid.vy;
       
-      // Alignment force
+      // Add some randomness to prevent perfect alignment and add life-like behavior
+      newVX += (Math.random() * 2 - 1) * randomness * maxSpeed;
+      newVY += (Math.random() * 2 - 1) * randomness * maxSpeed;
+      
+      // Alignment force (match velocity with neighbors)
       if (numNeighbors > 0) {
         newVX += (avgDX - boid.vx) * alignmentForce;
         newVY += (avgDY - boid.vy) * alignmentForce;
       }
       
-      // Cohesion force
+      // Cohesion force (move toward center of neighbors)
       if (numNeighbors > 0) {
         newVX += (avgX - boid.x) * cohesionForce;
         newVY += (avgY - boid.y) * cohesionForce;
       }
       
-      // Separation force
+      // Separation force (avoid crowding)
       newVX += separationX * separationForce;
       newVY += separationY * separationForce;
 
-      // Limit speed
+      // Ensure minimum speed so boids don't stop moving
       const speed = Math.sqrt(newVX * newVX + newVY * newVY);
+      if (speed < minSpeed) {
+        newVX = (newVX / speed) * minSpeed;
+        newVY = (newVY / speed) * minSpeed;
+      }
+      
+      // Limit maximum speed
       if (speed > maxSpeed) {
         newVX = (newVX / speed) * maxSpeed;
         newVY = (newVY / speed) * maxSpeed;
@@ -234,20 +296,14 @@ export const useBoidAnimation = (
       let newX = boid.x + newVX;
       let newY = boid.y + newVY;
 
-      // Wrap around the screen
-      if (newX < 0) newX = dimensions.width;
-      if (newX > dimensions.width) newX = 0;
-      if (newY < 0) newY = dimensions.height;
-      if (newY > dimensions.height) newY = 0;
-
-      // Return updated boid
-      return {
-        ...boid,
-        x: newX,
-        y: newY,
-        vx: newVX,
-        vy: newVY,
-      };
+      // Handle boundary behavior
+      return handleEdges({ 
+        ...boid, 
+        x: newX, 
+        y: newY, 
+        vx: newVX, 
+        vy: newVY 
+      }, dimensions);
     });
   }, [
     boids, 
@@ -258,7 +314,10 @@ export const useBoidAnimation = (
     visualRange, 
     minDistance, 
     maxSpeed, 
-    distance
+    minSpeed, 
+    randomness, 
+    distance,
+    handleEdges
   ]);
 
   // Animation loop

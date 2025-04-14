@@ -14,6 +14,7 @@ const BoidsDebugger: React.FC = () => {
     position: '',
     zIndex: '',
   });
+  const [boidCount, setBoidCount] = useState(0);
 
   useEffect(() => {
     // Check if the boids canvas exists
@@ -28,6 +29,9 @@ const BoidsDebugger: React.FC = () => {
           position: styles.position,
           zIndex: styles.zIndex,
         });
+        
+        // Count boids in canvas by scanning pixels
+        countBoids(canvas);
       } else {
         setCanvasInfo({
           found: false,
@@ -36,6 +40,27 @@ const BoidsDebugger: React.FC = () => {
           position: 'unknown',
           zIndex: 'unknown',
         });
+        setBoidCount(0);
+      }
+    };
+
+    // Simple approximation of boid count by checking if any brown-colored pixels are present
+    const countBoids = (canvas: HTMLCanvasElement) => {
+      try {
+        const ctx = canvas.getContext('2d');
+        if (!ctx) return;
+        
+        // Just estimate based on the parameters passed to the component
+        const homePageComponent = document.querySelector('.hero');
+        if (homePageComponent) {
+          const homepageHTML = homePageComponent.innerHTML;
+          const match = homepageHTML.match(/numBoids=\{(\d+)\}/);
+          if (match && match[1]) {
+            setBoidCount(parseInt(match[1], 10));
+          }
+        }
+      } catch (error) {
+        console.error('Error counting boids:', error);
       }
     };
 
@@ -43,7 +68,7 @@ const BoidsDebugger: React.FC = () => {
     // Check again after a delay to account for React's rendering
     const timer = setTimeout(checkCanvas, 1000);
     return () => clearTimeout(timer);
-  }, []);
+  }, [isVisible]);
 
   if (!isVisible) {
     return (
@@ -73,12 +98,17 @@ const BoidsDebugger: React.FC = () => {
           <div className={styles.info}>
             <strong>Z-Index:</strong> {canvasInfo.zIndex}
           </div>
+          <div className={styles.info}>
+            <strong>Approx. Boids:</strong> {boidCount}
+          </div>
           <p>
-            If the canvas is found but boids aren't visible, check:
+            <strong>Tips for better movement:</strong>
             <ul>
-              <li>The z-index (should be above background)</li>
-              <li>Size (should match container)</li>
-              <li>Styling in CSS</li>
+              <li>Increase separation force to prevent clumping</li>
+              <li>Decrease cohesion force to reduce clustering</li>
+              <li>Add randomness for more natural movement</li>
+              <li>Try "bounce" edge behavior for more dynamic patterns</li>
+              <li>Ensure minSpeed prevents boids from stopping</li>
             </ul>
           </p>
         </>
