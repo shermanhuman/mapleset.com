@@ -8,6 +8,9 @@
 .docusaurus
 .cache-loader
 
+# Environment variables
+.env
+
 # Misc
 .DS_Store
 .env.local

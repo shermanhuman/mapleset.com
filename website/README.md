@@ -1,41 +1,48 @@
-# Website
+# Mapleset.com Website
 
 This website is built using [Docusaurus](https://docusaurus.io/), a modern static website generator.
 
-### Installation
+## Installation
 
-```
-$ yarn
+```bash
+npm install
 ```
 
-### Local Development
+## Local Development
 
-```
-$ yarn start
+```bash
+npm start
 ```
 
 This command starts a local development server and opens up a browser window. Most changes are reflected live without having to restart the server.
 
-### Build
+## Deployment
 
+### First-time setup
+
+1. Create a GitHub Personal Access Token:
+   - Go to [GitHub Settings > Developer settings > Personal access tokens](https://github.com/settings/tokens)
+   - Generate a new token with the `repo` scope
+   - Copy the token
+
+2. Set up your environment:
+   - Copy `.env.example` to `.env`
+   - Replace `your_token_here` with your GitHub token in `.env`
+
+### Deploying
+
+To deploy the site:
+
+```bash
+npm run deploy
 ```
-$ yarn build
+
+This command builds the website and deploys it to the `gh-pages` branch using your GitHub token for authentication.
+
+## Build
+
+```bash
+npm run build
 ```
 
-This command generates static content into the `build` directory and can be served using any static contents hosting service.
-
-### Deployment
-
-Using SSH:
-
-```
-$ USE_SSH=true yarn deploy
-```
-
-Not using SSH:
-
-```
-$ GIT_USER=<Your GitHub username> yarn deploy
-```
-
-If you are using GitHub pages for hosting, this command is a convenient way to build the website and push to the `gh-pages` branch.
+This command generates static content into the `build` directory that can be served using any static contents hosting service.
