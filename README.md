@@ -20,24 +20,28 @@ This command starts a local development server and opens up a browser window. Mo
 
 ### First-time setup
 
-1. Create a GitHub Personal Access Token:
-   - Go to [GitHub Settings > Developer settings > Personal access tokens](https://github.com/settings/tokens)
-   - Generate a new token with the `repo` scope
-   - Copy the token
+1. Configure GitHub Pages:
+   - Go to your GitHub repository settings
+   - Navigate to "Pages" in the sidebar
+   - Under "Source", select "Deploy from a branch"
+   - Under "Branch", select "gh-pages" / "/ (root)"
+   - Click "Save"
+   - Wait a few minutes for the first deployment
 
-2. Set up your environment:
-   - Copy `.env.example` to `.env`
-   - Replace `your_token_here` with your GitHub token in `.env`
+### Deploying Updates
 
-### Deploying
-
-To deploy the site:
+To deploy new changes:
 
 ```bash
 npm run deploy
 ```
 
-This command builds the website and deploys it to the `gh-pages` branch using your GitHub token for authentication.
+This command:
+1. Builds the website into static files
+2. Pushes the built files to the `gh-pages` branch
+3. GitHub Pages will automatically deploy the new changes
+
+You can check the deployment status in your repository's "Actions" tab. It typically takes a few minutes for changes to appear on the live site.
 
 ## Build
 
