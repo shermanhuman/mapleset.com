@@ -1,0 +1,26 @@
+/* Hidden off screen until it has keyboard focus. Then it appears in the top-left
+   corner, the same distance from the edges as the menu button: a dark tile with
+   pixel corners and an outline, which reads on the hero's peach sky as well as
+   the plum pages, plus the usual focus ring. */
+.skipToContent {
+  --pixel-fill: var(--surface-raised);
+  --pixel-outline: var(--border-strong);
+  position: fixed;
+  top: calc(4px * var(--px));
+  left: 100%;
+  z-index: 100;
+  padding: 0.7rem 1.4rem;
+  color: var(--text);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.skipToContent:focus {
+  left: calc(4px * var(--px));
+}
+
+.skipToContent:hover {
+  --pixel-fill: var(--art-wine);
+  color: var(--link-hover);
+  text-decoration: none;
+}

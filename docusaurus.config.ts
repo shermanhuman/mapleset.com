@@ -5,9 +5,16 @@ import type * as Preset from '@docusaurus/preset-classic';
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
 const config: Config = {
-  title: 'MAPLESET',
-  tagline: 'Pragmatic AI Applications',
-  favicon: 'img/favicon.ico',
+  title: 'Mapleset LLC',
+  tagline: 'An independent software company.',
+  favicon: 'favicon.ico',
+
+  // The rest of the brand kit's icon set (favicon/head.html)
+  headTags: [
+    {tagName: 'link', attributes: {rel: 'icon', href: '/favicon.svg', type: 'image/svg+xml'}},
+    {tagName: 'link', attributes: {rel: 'apple-touch-icon', href: '/apple-touch-icon.png'}},
+    {tagName: 'link', attributes: {rel: 'manifest', href: '/site.webmanifest'}},
+  ],
 
   // Set the production url of your site here
   url: 'https://mapleset.com',
@@ -15,11 +22,9 @@ const config: Config = {
   // For GitHub pages deployment, it is often '/<projectName>/'
   baseUrl: '/',
 
-  // GitHub pages deployment config.
-  // If you aren't using GitHub pages, you don't need these.
-  organizationName: 'applesaucelabs', // Usually your GitHub org/user name.
-  projectName: 'mapleset.com', // Usually your repo name.
-
+  // No organizationName/projectName: they'd be shipped in the site's JS, and
+  // `npm run deploy` publishes with gh-pages, which doesn't need them.
+  baseUrlIssueBanner: false,
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
 
@@ -48,32 +53,50 @@ const config: Config = {
 
   themeConfig:
     {
-      // Replace with your project's social card
-      image: 'img/docusaurus-social-card.jpg', // TODO: Add a social card image
+      image: 'img/brand/mapleset-card-1200x630.png',
+      metadata: [{name: 'theme-color', content: '#31112d'}],
       navbar: {
-        title: 'MAPLESET', // Title in the navbar
         logo: {
-          alt: 'MAPLESET Logo',
-          src: 'img/logo.svg', // We'll add the logo file here later
+          alt: 'Mapleset',
+          src: 'img/brand/mapleset-horizontal-butter.svg',
+          width: 120,
+          height: 27,
         },
         items: [
-          // Remove any default items like Docs or Blog links if they exist
-          // Example: {to: '/blog', label: 'Blog', position: 'left'},
+          {to: '/#products', label: 'Products', position: 'right', activeBaseRegex: '^/#products$'},
+          {to: '/about', label: 'About', position: 'right'},
+          {to: '/contact', label: 'Contact', position: 'right'},
         ],
       },
       footer: {
-        style: 'light', 
+        style: 'light',
         links: [
+          {
+            title: 'Products',
+            items: [
+              {label: 'Deskwalker', to: '/deskwalker'},
+              {label: 'Senga Studio', to: '/senga-studio'},
+              {label: 'Orbital Support Cannon', to: '/orbital-support-cannon'},
+            ],
+          },
+          {
+            title: 'Company',
+            items: [
+              {label: 'About', to: '/about'},
+              {label: 'Contact', to: '/contact'},
+              {label: 'Privacy', to: '/privacy'},
+            ],
+          },
         ],
-        copyright: `Copyright © ${new Date().getFullYear()} Mapleset LLC.`,
+        copyright: `© ${new Date().getFullYear()} Mapleset LLC`,
       },
       prism: {
-        theme: prismThemes.github,
-        // darkTheme: prismThemes.dracula, // Dark theme is not needed
+        // Code blocks are inline-styled from the theme: text and surface-raised from the brand tokens
+        theme: {...prismThemes.github, plain: {color: '#f8edd8', backgroundColor: '#4b2240'}},
       },
       colorMode: {
-        // Disable the dark mode switch
-        defaultMode: 'light',
+        // The brand's dark (plum) theme, with no switch
+        defaultMode: 'dark',
         disableSwitch: true,
         respectPrefersColorScheme: false,
       },

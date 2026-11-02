@@ -1,61 +1,177 @@
-/* Import Inter font */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+/* Manrope (SIL Open Font License 1.1, see /fonts/OFL.txt), self-hosted so the site makes no third-party requests */
+@font-face {
+  font-family: 'Manrope';
+  src: url('/fonts/Manrope-Variable.woff2') format('woff2');
+  font-weight: 200 800;
+  font-style: normal;
+  font-display: swap;
+}
 
-/**
- * Any CSS variable defined here will be available globally.
- */
+/* JetBrains Mono NL for code (SIL Open Font License 1.1, see /fonts/OFL-JetBrainsMono.txt).
+   NL: the build with no ligatures, so code shows exactly what to type (-> stays ->). */
+@font-face {
+  font-family: 'JetBrains Mono NL';
+  src: url('/fonts/JetBrainsMonoNL-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'JetBrains Mono NL';
+  src: url('/fonts/JetBrainsMonoNL-Italic.woff2') format('woff2');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'JetBrains Mono NL';
+  src: url('/fonts/JetBrainsMonoNL-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
 
-:root {
-  --ifm-color-primary: #2e8555; /* Example primary color */
-  --ifm-color-primary-dark: #29784c;
-  --ifm-color-primary-darker: #277148;
-  --ifm-color-primary-darkest: #205d3b;
-  --ifm-color-primary-light: #33925d;
-  --ifm-color-primary-lighter: #359962;
-  --ifm-color-primary-lightest: #3cad6e;
+/* Mapleset colours from the brand kit (ui/tokens.css): the art palette and the
+   interface roles built on it. The site uses the dark (plum) theme; the
+   theme selector outranks Infima's own dark colours. */
+:root,
+html[data-theme='dark'] {
+  --art-plum: #31112d;
+  --art-wine: #7c183c;
+  --art-red: #de4c63;
+  --art-peach: #ff9f74;
+  --art-butter: #ffe18f;
+  --bg: #31112d;
+  --surface: #3d1a36;
+  --surface-raised: #4b2240;
+  --border: #6b3a57;
+  --border-strong: #a8607d;
+  --text: #f8edd8;
+  --text-muted: #d9b5a2;
+  --link: #ff9f74;
+  --link-hover: #ffe18f;
+  --accent: #de4c63;
+  --button: #ff9f74;
+  --on-button: #31112d;
+  --focus: #ffe18f;
+  --info: #b8b7f0;
+  --font-sans: 'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono NL', ui-monospace, 'SF Mono', 'Cascadia Mono', monospace;
+
+  --ifm-color-primary: var(--link);
+  --ifm-color-primary-dark: var(--link);
+  --ifm-color-primary-darker: var(--link);
+  --ifm-color-primary-darkest: var(--link);
+  --ifm-color-primary-light: var(--link-hover);
+  --ifm-color-primary-lighter: var(--link-hover);
+  --ifm-color-primary-lightest: var(--link-hover);
+  --ifm-link-color: var(--link);
+  --ifm-link-hover-color: var(--link-hover);
   --ifm-code-font-size: 95%;
-  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
 
-  /* Apply Inter font globally */
-  --ifm-font-family-base: 'Inter', sans-serif;
-  
-  /* Custom colors */
-  --boid-color: #6a5a45;
-  --hero-background-color: #ece6d6; /* Tan color for hero background */
-  --main-background-color: #f8f8f8; /* Light grey almost white for main background */
+  --ifm-font-family-base: var(--font-sans);
+  --ifm-heading-font-family: var(--font-sans);
+  --ifm-font-family-monospace: var(--font-mono); /* Infima's code, pre and kbd */
+  --ifm-heading-font-weight: 700;
+  --ifm-font-color-base: var(--text);
+  --ifm-heading-color: var(--text);
+  --ifm-background-color: var(--bg);
+  --ifm-background-surface-color: var(--surface);
+  --ifm-navbar-height: 0px; /* No bar (src/theme/Navbar), so anchors need no offset */
+  --ifm-code-background: var(--surface-raised);
+  --ifm-pre-background: var(--surface-raised);
+  --ifm-hr-background-color: var(--border);
+  --ifm-color-emphasis-300: var(--border);
 }
 
-/* For readability concerns, you should choose a lighter palette in dark mode. */
-/* Dark mode is disabled, so we don't strictly need this, but good practice */
-/* [data-theme='dark' {
-  --ifm-color-primary: #25c2a0;
-  --ifm-color-primary-dark: #21af90;
-  --ifm-color-primary-darker: #1fa588;
-  --ifm-color-primary-darkest: #1a8870;
-  --ifm-color-primary-light: #29d5b0;
-  --ifm-color-primary-lighter: #32d8b4;
-  --ifm-color-primary-lightest: #4fddbf;
-  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
-} */
-
-/* Set the main background color */
-html, body, #__docusaurus {
-  background-color: var(--main-background-color);
-  color: #333; /* Ensure default text has good contrast */
+:focus-visible {
+  outline: var(--pixel-line) solid var(--focus);
+  outline-offset: var(--pixel-line);
 }
 
-/* Ensure navbar title uses the font */
-.navbar__title {
-  font-family: var(--ifm-font-family-base);
+/* CSS pixels per art pixel for the brand's pixel art (hero scene, lockup,
+   menu button): whole numbers only */
+:root {
+  --px: 3;
 }
 
-/* Ensure footer uses the font */
-.footer {
-  font-family: var(--ifm-font-family-base);
+@media screen and (max-width: 996px) {
+  :root {
+    --px: 2;
+  }
 }
 
-/* Make sure the hero section has the tan background */
-.hero {
-  min-height: calc(100vh - var(--ifm-navbar-height) - var(--ifm-footer-height) - 1px);
-  background-color: var(--hero-background-color);
+@media screen and (min-width: 2641px) {
+  :root {
+    --px: 4;
+  }
+}
+
+/* Corners stepped in whole art pixels, like the brand's pixel art (the menu
+   tile, the hero): two steps, as a pixel-art rounded rectangle draws them */
+:root {
+  --pixel-line: calc(1px * var(--px)); /* Outlines and rules: one art pixel, so they read as pixel art */
+  --pixel-corners: polygon(
+    0 calc(2px * var(--px)), calc(1px * var(--px)) calc(2px * var(--px)), calc(1px * var(--px)) calc(1px * var(--px)), calc(2px * var(--px)) calc(1px * var(--px)), calc(2px * var(--px)) 0,
+    calc(100% - 2px * var(--px)) 0, calc(100% - 2px * var(--px)) calc(1px * var(--px)), calc(100% - 1px * var(--px)) calc(1px * var(--px)), calc(100% - 1px * var(--px)) calc(2px * var(--px)), 100% calc(2px * var(--px)),
+    100% calc(100% - 2px * var(--px)), calc(100% - 1px * var(--px)) calc(100% - 2px * var(--px)), calc(100% - 1px * var(--px)) calc(100% - 1px * var(--px)), calc(100% - 2px * var(--px)) calc(100% - 1px * var(--px)), calc(100% - 2px * var(--px)) 100%,
+    calc(2px * var(--px)) 100%, calc(2px * var(--px)) calc(100% - 1px * var(--px)), calc(1px * var(--px)) calc(100% - 1px * var(--px)), calc(1px * var(--px)) calc(100% - 2px * var(--px)), 0 calc(100% - 2px * var(--px))
+  );
+}
+
+/* A box with pixel corners. Its fill and outline are pseudo-elements clipped to
+   the shape, so the box itself isn't clipped and its focus ring still shows.
+   Set --pixel-fill, and --pixel-outline for an outline one art pixel wide;
+   the box must be positioned. The variables inherit (the pseudo-elements need
+   them), so a box without an outline sets --pixel-outline: initial, or inside
+   an outlined box it would take that box's outline. */
+.pixel-box {
+  isolation: isolate;
+  border: 0;
+  border-radius: 0;
+  background: none;
+}
+
+.pixel-box::before,
+.pixel-box::after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  clip-path: var(--pixel-corners);
+  pointer-events: none;
+}
+
+.pixel-box::before {
+  inset: 0;
+  background: var(--pixel-outline, var(--pixel-fill));
+}
+
+.pixel-box::after {
+  inset: var(--pixel-line);
+  background: var(--pixel-fill);
+}
+
+.theme-code-block {
+  border-radius: 0;
+  clip-path: var(--pixel-corners);
+}
+
+/* Markdown pages (products, about, contact, privacy) read at text width */
+main.container > .row > .col {
+  max-width: 44rem;
+  margin: 0 auto;
+}
+
+.markdown img {
+  clip-path: var(--pixel-corners);
+}
+
+/* A product's pixel-art icon at the top of its page, at its own size */
+.markdown img.pixel-icon {
+  display: block;
+  width: 128px;
+  height: 128px;
+  margin-bottom: 1rem;
+  clip-path: none;
+  image-rendering: pixelated;
 }
