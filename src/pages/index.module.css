@@ -3,60 +3,194 @@
  * and scoped locally.
  */
 
-.heroBanner {
-  padding: 4rem 0; /* Increased padding to make the section taller */
-  text-align: center;
+/* The hero is the brand kit's pixel scene, 880 × 110 art pixels, scaled by a
+   whole number (--px, set in custom.css) and cropped at the sides. The crop keeps art column --crop
+   at the left edge until the screen is wider than the middle 480 columns, so
+   the lockup (at 240, 16, where the kit places it) stays in open sky. */
+.hero {
+  --crop: 200;
+  padding-bottom: 1rem;
+}
+
+.scene {
   position: relative;
   overflow: hidden;
-  background-color: var(--hero-background-color);
-  min-height: calc(100vh - var(--ifm-navbar-height) - var(--ifm-footer-height) - 1px);
+  height: calc(110px * var(--px));
+}
+
+.sceneArt {
+  position: absolute;
+  top: 0;
+  left: max(calc(var(--crop) * -1px * var(--px)), calc(50% - 440px * var(--px)));
+  width: calc(880px * var(--px));
+  height: 100%;
+}
+
+.sceneArt img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  image-rendering: pixelated;
+}
+
+.sceneArt .lockup {
+  position: absolute;
+  top: calc(16px * var(--px));
+  left: calc(240px * var(--px));
+  width: calc(120px * var(--px));
+  height: calc(27px * var(--px));
+}
+
+.heroTitle {
+  margin: 2.5rem 0 2rem;
+  font-size: clamp(2.25rem, 4.5vw, 3.25rem);
+  line-height: 1.1;
+}
+
+.heroIntro {
+  max-width: 40rem;
+  margin: -1rem 0 2rem;
+  color: var(--text-muted);
+  font-size: 1.125rem;
+}
+
+.heroTitle em {
+  font-style: normal;
+  color: var(--accent);
+}
+
+.buttonPrimary {
+  --pixel-fill: var(--button);
+  --pixel-outline: initial;
+  position: relative;
+  display: inline-block;
+  padding: 0.7rem 1.4rem;
+  font-weight: 600;
+}
+
+.buttonPrimary,
+.buttonPrimary:hover {
+  color: var(--on-button);
+  text-decoration: none;
+}
+
+.buttonPrimary:hover {
+  --pixel-fill: color-mix(in oklab, var(--button) 82%, var(--text));
+}
+
+.section {
+  padding: 4rem 0;
+}
+
+
+.productGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.product {
+  --pixel-fill: var(--surface);
+  --pixel-outline: var(--border);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  color: inherit;
+}
+
+.product:hover {
+  --pixel-outline: var(--border-strong);
+  color: inherit;
+  text-decoration: none;
+}
+
+.productArtFrame {
   display: flex;
   align-items: center;
   justify-content: center;
-  /* Add a subtle box shadow to create a visual boundary */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-  z-index: 0;
-  /* Add a border to clearly define the boundary */
-  border-bottom: 1px solid rgba(106, 90, 69, 0.1);
+  height: 220px;
+  padding: 1.5rem 2rem;
+  border-bottom: var(--pixel-line) solid var(--border);
+  color: var(--art-peach);
 }
 
-/* Container for boids animation, positioned to fill the hero section */
-.boidsContainer {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 1; /* Make sure this is visible */
-  /* Clip boids to this container */
-  overflow: hidden;
-}
-
-.heroLogo {
+.productArt {
   display: block;
-  margin-left: auto;
-  margin-right: auto;
-  width: 600px;
-  max-width: 90%;
-  height: auto;
-  position: relative;
-  z-index: 2; /* Keep this above the boids */
+  width: 100%;
+  max-width: 400px;
+  max-height: 100%;
 }
+
+/* Pixel art at its own size, never scaled by a fraction */
+.pixelIcon {
+  display: block;
+  width: 128px;
+  height: 128px;
+  image-rendering: pixelated;
+}
+
+.productIcon {
+  display: block;
+  height: 100%;
+  max-height: 170px;
+}
+
+.productArtLabels {
+  font-size: 15px;
+  font-weight: 600;
+  fill: currentColor;
+}
+
+.productBody {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem;
+}
+
+.productBody h3 {
+  margin-bottom: 0.25rem;
+  font-size: 1.5rem;
+}
+
+/* Status badge, as in the kit's interface examples */
+.productStatus {
+  display: inline-flex;
+  align-self: flex-start;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 0.75rem;
+  padding: 5px 9px;
+  background: color-mix(in oklab, var(--info) 18%, var(--surface));
+  clip-path: var(--pixel-corners);
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1;
+}
+
+/* The dot, as a square of art pixels */
+.productStatus::before {
+  content: '';
+  width: calc(2px * var(--px));
+  height: calc(2px * var(--px));
+  background: var(--info);
+}
+
+.productMore {
+  margin-top: auto;
+  font-weight: 600;
+  color: var(--ifm-link-color);
+}
+
+
 
 @media screen and (max-width: 996px) {
-  .heroBanner {
-    padding: 2rem;
-    min-height: calc(100vh - var(--ifm-navbar-height) - var(--ifm-footer-height) - 1px);
+  /* Lockup 15 art pixels from the edge, leaving room for the menu button */
+  .hero {
+    --crop: 225;
   }
-  .heroLogo {
-     width: 450px;
-     max-width: 90%;
-  }
-}
-
-@media screen and (max-width: 768px) {
-  .heroLogo {
-     width: 300px;
-     max-width: 85%;
+  .productGrid {
+    grid-template-columns: minmax(0, 1fr);
   }
 }

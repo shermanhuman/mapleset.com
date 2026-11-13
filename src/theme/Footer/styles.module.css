@@ -1,0 +1,80 @@
+/* No background, so the falling leaves (src/theme/Root) continue behind it */
+.footer {
+  margin-top: 3rem;
+  padding: 3rem 0 3.5rem;
+  border-top: var(--pixel-line) solid var(--border);
+}
+
+.inner {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 2.5rem 4rem;
+}
+
+.home {
+  display: inline-block;
+  line-height: 0;
+}
+
+/* Pixel art at 1x, never a fraction */
+.home img {
+  width: 120px;
+  height: 27px;
+  image-rendering: pixelated;
+}
+
+.tagline {
+  margin: 1rem 0 0.25rem;
+  color: var(--text);
+}
+
+.copyright {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.875rem;
+}
+
+.groups {
+  display: flex;
+  gap: 4rem;
+}
+
+/* The brand's eyebrow style: 11/700, capitals */
+.heading {
+  margin: 0 0 0.9rem;
+  color: var(--text-muted);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.list li + li {
+  margin-top: 0.55rem;
+}
+
+.list a {
+  color: var(--text);
+}
+
+.list a:hover {
+  color: var(--link-hover);
+  text-decoration: none;
+}
+
+@media screen and (max-width: 600px) {
+  .inner {
+    flex-direction: column;
+  }
+
+  .groups {
+    gap: 3rem;
+  }
+}

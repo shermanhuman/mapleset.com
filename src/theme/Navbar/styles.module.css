@@ -1,0 +1,126 @@
+.nav {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  --nav-side: 1.5rem; /* Also lines the menu up under the button */
+  padding: 1.25rem var(--nav-side) 0;
+}
+
+/* Out of the flow on the home page, so the hero starts at the top edge; the
+   button sits 4 art pixels from the top and right */
+.overHero {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  justify-content: flex-end;
+  --nav-side: calc(4px * var(--px));
+  padding: var(--nav-side) var(--nav-side) 0;
+}
+
+.home {
+  display: block;
+  line-height: 0;
+}
+
+/* Pixel art at 2x, never a fraction */
+.home img {
+  width: 240px;
+  height: 54px;
+  image-rendering: pixelated;
+}
+
+.menuButton {
+  position: relative;
+  display: block;
+  padding: 0;
+  border: 0;
+  background: none;
+  line-height: 0;
+  cursor: pointer;
+}
+
+/* A bigger hit area than the drawing, for touch */
+.menuButton::after {
+  content: '';
+  position: absolute;
+  inset: -8px;
+}
+
+/* Whole-number scale with the hero (--px) */
+.menuButton svg {
+  width: calc(15px * var(--px));
+  height: calc(13px * var(--px));
+}
+
+.tile {
+  fill: var(--surface-raised);
+}
+
+.bars {
+  fill: var(--art-butter);
+}
+
+/* Plum over the hero's sky, like the lockup there */
+.overHero .tile {
+  fill: var(--art-plum);
+}
+
+.menuButton:hover .tile {
+  fill: var(--art-wine);
+}
+
+.menu {
+  position: absolute;
+  top: 100%;
+  right: var(--nav-side);
+  min-width: 12rem;
+  margin: 0.5rem 0 0;
+  padding: 0.5rem 0;
+  list-style: none;
+  --pixel-fill: var(--surface);
+  --pixel-outline: var(--border);
+}
+
+.menu[hidden] {
+  display: none;
+}
+
+.menu a,
+.menu button {
+  display: block;
+  padding: 0.6rem 1.25rem;
+  color: var(--text);
+  font-weight: 600;
+}
+
+/* The leaves control, set apart from the page links */
+.menuSetting {
+  margin-top: 0.5rem;
+  padding-top: 0.5rem;
+  border-top: var(--pixel-line) solid var(--border);
+}
+
+.menu button {
+  width: 100%;
+  border: 0;
+  background: none;
+  font: inherit;
+  font-weight: 600;
+  text-align: left;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
+.menu a:hover,
+.menu button:hover {
+  background: var(--surface-raised);
+  color: var(--link-hover);
+  text-decoration: none;
+}
+
+.menu a.current {
+  color: var(--link);
+}

@@ -1,12 +1,16 @@
-.boidsCanvas {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none; /* Make sure the canvas doesn't interfere with mouse events */
-  display: block; /* Ensure the canvas is displayed */
-  opacity: 1; /* Ensure visibility */
-  /* Clip to the canvas boundaries */
+/* Behind everything on the page, over only the page's own background: content,
+   cards and the hero's sky cover the leaves; the hero's plum foreground is
+   transparent, so they show through it */
+.layer {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
   overflow: hidden;
+  pointer-events: none;
+}
+
+/* One canvas pixel per art pixel, scaled up by --px like the hero */
+.layer canvas {
+  display: block;
+  image-rendering: pixelated;
 }
