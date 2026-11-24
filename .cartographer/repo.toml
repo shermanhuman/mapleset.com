@@ -1,0 +1,9 @@
+# cartographer settings for this repository. The map itself is built on each
+# machine and never committed. https://github.com/shermanhuman/cartographer#map-your-project
+#
+# A project of one: this repo is its own anchor.
+project = "mapleset.com"
+members = [{ repo = "shermanhuman/mapleset.com" }]
+extract = ["javascript"]
+source_roots = ["src"]
+docs = ["README.md"]
